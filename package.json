@@ -5,5 +5,10 @@
   "main": "app.js",
   "repository": "https://github.com/alexandrebouttier/coinmarketcap-icons-cryptos.git",
   "author": "Alexandre",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "cmlog": "^1.0.4",
+    "lodash": "^4.17.20"
+  }
 }
