@@ -60,6 +60,11 @@ has-flag@^3.0.0:
   resolved "https://registry.yarnpkg.com/has-flag/-/has-flag-3.0.0.tgz#b5d454dc2199ae225699f3467e5a07f3b955bafd"
   integrity sha1-tdRU3CGZriJWmfNGfloH87lVuv0=
 
+image-downloader@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/image-downloader/-/image-downloader-4.0.1.tgz#2cf211107050595ed1f99af4531ebea4aeea3dfc"
+  integrity sha512-VfjlMHx1DDPN27x6IC15+6oejeG0A1S955r7oF4rsxqAh8+ygJ3avK8yi8pJztz5qir/x1dFV+eCIy3155byhg==
+
 lodash@^4.17.20:
   version "4.17.20"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"

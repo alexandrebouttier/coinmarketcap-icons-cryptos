@@ -1,7 +1,7 @@
 const axios = require('axios');
 const cmlog = require('cmlog');
 const _ = require('lodash');
-
+const download = require('image-downloader');
 const config = require('./config.json');
 
 cmlog.debug('Start generator');
@@ -23,7 +23,6 @@ axios
 
     cryptos.forEach(function (crypto, index) {
       setTimeout(function () {
-        console.log('get logo url');
         axios
           .get(
             `https://pro-api.coinmarketcap.com/v1/cryptocurrency/info?symbol=${crypto}`,
@@ -31,11 +30,22 @@ axios
               headers: { 'X-CMC_PRO_API_KEY': config.apikey },
             }
           )
-          .then((o) =>
-            console.log('youp', o.data.data[_.upperCase(crypto)].logo)
-          )
-          .catch((err) => console.log('errreur', err));
-      }, 10000 * (index + 1)); // or just index, depends on your needs
+          .then((o) => {
+            const imageUrl = o.data.data[_.upperCase(crypto)].logo;
+            const options = {
+              url: imageUrl,
+              dest: `${config.folderDist}/${crypto}.png`,
+            };
+
+            download
+              .image(options)
+              .then(({ filename }) => {
+                cmlog.success('Image sauvegarder ', filename);
+              })
+              .catch((err) => cmlog.error(new Error(err)));
+          })
+          .catch((err) => cmlog.error(new Error(err)));
+      }, 10000 * (index + 1));
     });
   })
   .catch((err) => {

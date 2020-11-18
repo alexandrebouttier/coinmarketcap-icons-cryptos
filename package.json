@@ -9,6 +9,7 @@
   "dependencies": {
     "axios": "^0.21.0",
     "cmlog": "^1.0.4",
+    "image-downloader": "^4.0.1",
     "lodash": "^4.17.20"
   }
 }
