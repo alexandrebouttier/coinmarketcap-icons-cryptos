@@ -3,7 +3,7 @@ const cmlog = require('cmlog');
 const _ = require('lodash');
 const download = require('image-downloader');
 const config = require('./config.json');
-
+const fs = require('fs');
 cmlog.start('Start generator');
 
 const cryptos = [];
@@ -14,12 +14,20 @@ axios
     headers: { 'X-CMC_PRO_API_KEY': config.apikey },
   })
   .then((res) => {
-    res.data.data.map((crypto, index) =>
-      cryptos.push(_.lowerCase(crypto.symbol))
-    );
+    res.data.data.map((crypto, index) => {
+      cryptos.push(_.lowerCase(crypto.symbol));
+    });
+
+    try {
+      fs.writeFileSync('cryptos.txt', cryptos);
+    } catch (e) {
+      console.log('Cannot write file ', e);
+    }
   })
   .then(() => {
-    cmlog.success(`Récuperation de la liste des cryptos [${cryptos.length}]`);
+    cmlog.success(
+      `Récuperation de la liste des cryptos Total: [${cryptos.length}]`
+    );
 
     cryptos.forEach((crypto, index) => {
       setTimeout(() => {
