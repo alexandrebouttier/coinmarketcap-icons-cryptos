@@ -6,8 +6,18 @@ const config = require('./config.json');
 const fs = require('fs');
 const folderPatch = process.cwd();
 const cryptos = [];
-const filesErrors = [];
 
+const filesIconsExists = [];
+
+try {
+  files = fs.readdirSync(`${folderPatch}/icons/`, { withFileTypes: true });
+  files.forEach(function (result) {
+    filesIconsExists.push(result.name.substr(0, result.name.length - 4));
+  });
+} catch (err) {
+  cmlog.error(new Error(err));
+}
+console.log('filesIconsExists', filesIconsExists);
 cmlog.start('Start generator');
 if (!_.isEmpty(config.apikey)) {
   axios
