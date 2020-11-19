@@ -7,7 +7,7 @@
   <br>
 </h1>
 
-<h4 align="center">A simple script for downloading all cryptocurrency icons from CoinMarketCap</h4>
+<h4 align="center">Repository of all crypto icons, and allows you to download all images of icons of crypto currencies listed on the coinmarketcap site</h4>
 
 ---
 
