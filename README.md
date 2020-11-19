@@ -13,10 +13,7 @@
 
 ## Key Features
 
-* Build with Node.js
-* Downloads all icons in 16x16, 32x32, 64x64 or 128x128 pixels
-* Names icons based on slug, ticker or rank
-* Always gets the latest icons in .png format
+* Download only the icons not present in the repository
 * Super simple to run :wink:
 
 
@@ -24,18 +21,20 @@
 
 To run this script, you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/). Next open up your terminal and from your command line type:
 
+
 ```bash
 # Clone the repo
 $ git clone https://github.com/alexandrebouttier/coinmarketcap-icons-cryptos.git
 $ yarn
 # Go into the coinmarketcap-icons-cryptos directory
 $ cd coinmarketcap-icons-cryptos
+```
+Add your coinmarketcap api key in config.json, works with free subscriptions
 
+```bash
 # Run the script
 $ node app.js
-```
-
-## Legal
+```## Legal
 
 As stated in the [CoinMarketCap FAQ](https://coinmarketcap.com/faq/) it is allowed to use resources from the coinmarketcap.com website.
 
