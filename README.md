@@ -38,9 +38,6 @@ $ node app.js
 
 As stated in the [CoinMarketCap FAQ](https://coinmarketcap.com/faq/) it is allowed to use resources from the coinmarketcap.com website.
 
-## Licence
-MIT
-
 
 Allows you to retrieve all the images of the icons of the crypto currencies listed on the coinmarketcap site
 
