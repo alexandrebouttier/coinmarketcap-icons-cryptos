@@ -39,67 +39,75 @@ if (!_.isEmpty(config.apikey)) {
         cryptos.push(_.lowerCase(crypto.symbol));
       });
     })
-
     .then(() => {
-      cmlog.success(
-        `Retrieving the list of cryptos Total: [${cryptos.length}]`
-      );
-
       const cryptosData = _.filter(
         cryptos,
         (o) => !_.includes(filesIconsExists, o) && !_.includes(blacklist, o)
       );
 
-      cryptosData.forEach((crypto, index) => {
-        setTimeout(() => {
-          axios
-            .get(
-              `https://pro-api.coinmarketcap.com/v1/cryptocurrency/info?symbol=${crypto}`,
-              {
-                headers: { 'X-CMC_PRO_API_KEY': config.apikey },
-              }
-            )
-            .then((o) => {
-              const imageUrl = o.data.data[_.upperCase(crypto)].logo;
-              const options = {
-                url: imageUrl,
-                dest: `${folderPatch}/icons/${crypto}.png`,
-              };
+      cmlog.success(
+        `Retrieving the list of cryptos Total: [${cryptosData.length}]`
+      );
 
-              download
-                .image(options)
-                .then(({ filename }) => {
-                  cmlog.success(`Icon saved ${filename}`);
-                  cmlog.waitting(`PROGRESS [${index + 1}/${cryptos.length}]`);
-                })
-                .catch((err) => cmlog.error(new Error(err)));
-            })
-            .catch((err) => {
-              if (err.response.status === 400) {
-                cmlog.error(new Error(`Crypto icon not found => "${crypto}"`));
+      if (cryptosData.length === 0) {
+        cmlog.done('All icons have been updated !');
+      } else {
+        cryptosData.forEach((crypto, index) => {
+          setTimeout(() => {
+            axios
+              .get(
+                `https://pro-api.coinmarketcap.com/v1/cryptocurrency/info?symbol=${crypto}`,
+                {
+                  headers: { 'X-CMC_PRO_API_KEY': config.apikey },
+                }
+              )
+              .then((o) => {
+                const imageUrl = o.data.data[_.upperCase(crypto)].logo;
+                const options = {
+                  url: imageUrl,
+                  dest: `${folderPatch}/icons/${crypto}.png`,
+                };
 
-                const createCsvWriter = require('csv-writer')
-                  .createObjectCsvWriter;
-                const csvWriter = createCsvWriter({
-                  path: 'blacklist.csv',
-                  header: [{ id: 'name', title: 'NAME' }],
-                  append: true,
-                });
+                download
+                  .image(options)
+                  .then(({ filename }) => {
+                    cmlog.success(`Icon saved ${filename}`);
+                    cmlog.waitting(
+                      `PROGRESS [${index + 1}/${cryptosData.length}]`
+                    );
+                  })
+                  .catch((err) => cmlog.error(new Error(err)));
+              })
+              .catch((err) => {
+                if (err && err.response && err.response.status === 400) {
+                  cmlog.error(
+                    new Error(`Crypto icon not found => "${crypto}"`)
+                  );
 
-                const records = [{ name: crypto }];
-
-                csvWriter
-                  .writeRecords(records) // returns a promise
-                  .then(() => {
-                    cmlog.info(`Crypto add blacklist => ${crypto}"`);
+                  const createCsvWriter = require('csv-writer')
+                    .createObjectCsvWriter;
+                  const csvWriter = createCsvWriter({
+                    path: 'blacklist.csv',
+                    header: [{ id: 'name', title: 'NAME' }],
+                    append: true,
                   });
-              }
-            });
-          if (index + 1 === cryptosData.length) {
-            cmlog.done('All icons have been updated !');
-          }
-        }, 4000 * (index + 1));
-      });
+
+                  const records = [{ name: crypto }];
+
+                  csvWriter
+                    .writeRecords(records) // returns a promise
+                    .then(() => {
+                      cmlog.info(`Crypto add blacklist => ${crypto}"`);
+                    });
+                }
+              });
+
+            if (index + 1 === cryptosData.length) {
+              cmlog.done('All icons have been updated !');
+            }
+          }, 4000 * (index + 1));
+        });
+      }
     })
     .catch((err) => {
       cmlog.error(new Error(err));
