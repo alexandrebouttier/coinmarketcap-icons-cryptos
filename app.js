@@ -15,9 +15,8 @@ const blacklist = [];
 
 fs.createReadStream('blacklist.csv')
   .pipe(csv())
-  .on('data', (data) => blacklist.push(data))
-  .on('end', () => {
-    console.log(blacklist);
+  .on('data', (data) => {
+    blacklist.push(data.NAME);
   });
 
 try {
@@ -45,7 +44,7 @@ if (!_.isEmpty(config.apikey)) {
       cmlog.success(
         `Retrieving the list of cryptos Total: [${cryptos.length}]`
       );
-      console.log('blacklist === ', blacklist);
+
       const cryptosData = _.filter(
         cryptos,
         (o) => !_.includes(filesIconsExists, o) && !_.includes(blacklist, o)
@@ -78,11 +77,6 @@ if (!_.isEmpty(config.apikey)) {
             .catch((err) => {
               if (err.response.status === 400) {
                 cmlog.error(new Error(`Crypto icon not found => "${crypto}"`));
-                /*   var wstream = fs.createWriteStream('blacklist.csv', {
-                  flags: 'a',
-                });
-                wstream.write(`${crypto}` + ',');
-                wstream.end(); */
 
                 const createCsvWriter = require('csv-writer')
                   .createObjectCsvWriter;
