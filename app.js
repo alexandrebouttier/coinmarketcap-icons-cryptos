@@ -1,11 +1,15 @@
 const axios = require('axios');
+
+const fs = require('fs');
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const csv = require('csv-parser');
 
 const cmlog = require('cmlog');
 const _ = require('lodash');
+
 const download = require('image-downloader');
+
 const config = require('./config.json');
-const fs = require('fs');
 
 const folderPatch = process.cwd();
 const cryptos = [];
@@ -49,7 +53,7 @@ if (!_.isEmpty(config.apikey)) {
         `Retrieving the list of cryptos Total: [${cryptosData.length}]`
       );
 
-      if (cryptosData.length === 0) {
+      if (cryptosData && cryptosData.length === 0) {
         cmlog.done('All icons have been updated !');
       } else {
         cryptosData.forEach((crypto, index) => {
@@ -84,8 +88,6 @@ if (!_.isEmpty(config.apikey)) {
                     new Error(`Crypto icon not found => "${crypto}"`)
                   );
 
-                  const createCsvWriter = require('csv-writer')
-                    .createObjectCsvWriter;
                   const csvWriter = createCsvWriter({
                     path: 'blacklist.csv',
                     header: [{ id: 'name', title: 'NAME' }],
