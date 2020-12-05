@@ -177,7 +177,7 @@ if (!_.isEmpty(config.apikey)) {
           if (index + 1 === cryptosData.length) {
             cmlog.done('All icons have been updated !');
           }
-        }, 1000 * (index + 1));
+        }, 4000 * (index + 1));
       });
     })
     .catch((err) => {
