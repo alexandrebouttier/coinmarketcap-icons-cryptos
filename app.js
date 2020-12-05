@@ -1,122 +1,32 @@
 const axios = require('axios');
+const csv = require('csv-parser');
+
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+const csvWriter = createCsvWriter({
+  path: 'blacklist.csv',
+});
+
 const cmlog = require('cmlog');
 const _ = require('lodash');
 const download = require('image-downloader');
 const config = require('./config.json');
 const fs = require('fs');
+var wstream = fs.createWriteStream('blacklist.csv');
 const folderPatch = process.cwd();
 const cryptos = [];
 
 const filesIconsExists = [];
 
-const blacklist = [
-  'emc 2',
-  'c 2',
-  'lc 4',
-  'vec 2',
-  'n 8 v',
-  'xbtc 21',
-  '2 give',
-  'nlc 2',
-  'erc 20',
-  'b 2 b',
-  'c 20',
-  '1 wo',
-  'j 8 t',
-  'ac 3',
-  'tm 2',
-  '0 x btc',
-  'rock 2',
-  'x 8 x',
-  'x 12',
-  'f 1 c',
-  'plus 1',
-  'd 4 rk',
-  'b 2 g',
-  's 4 f',
-  '1 sg',
-  '1 x 2',
-  'rc 20',
-  'e 2 c',
-  'p 2 px',
-  'btc 2',
-  'b 91',
-  '7 e',
-  'cix 100',
-  'x 42',
-  'mb 8',
-  '1 up',
-  '1 mt',
-  '1 gold',
-  'et lyte t',
-  'on le xpa',
-  '1 ai',
-  'afro x',
-  'ifx 24',
-  'ak 12',
-  'r 2 r',
-  'im btc',
-  'i own',
-  'b 1 p',
-  'ff 1',
-  'ag 8',
-  '2 key',
-  'ly xe',
-  'sac 1',
-  't 69',
-  'mo co',
-  'btc 3 l',
-  'btc 3 s',
-  'eth 3 s',
-  'eth 3 l',
-  'gom 2',
-  '3 cs',
-  '4 art',
-  'l 2 p',
-  'ydai yusdc yusdt ytusd',
-  'eth 20 smaco',
-  'ethrsi 6040',
-  's trx',
-  's link',
-  's btc',
-  'fx 1',
-  'lburst',
-  'based',
-  'e mtrg',
-  'yamv 2',
-  'dacc 2',
-  'yi 12',
-  'yf dai',
-  'g kimchi',
-  'i 9 c',
-  'yfi 2',
-  'p 2 p',
-  'po sh',
-  'y tsla',
-  'x btc',
-  'rope',
-  'safe 2',
-  'c 2 o',
-  'yf 4',
-  'defi s',
-  'defi l',
-  'milk 2',
-  'wvg 0',
-  'wg 0',
-  'y ban',
-  'pxusd mar 2021',
-  'kp 3 r',
-  'x dot',
-  'n 0031',
-  'kp 4 r',
-  'yfb 2',
-  '7 up',
-  'nyan 2',
-  'noob',
-  'bst 1',
-  'ib eth',
-  'sav 3',
-];
+fs.createReadStream('blacklist.csv')
+  .pipe(csv())
+  .on('data', (row) => {
+    console.log('lectutr', row);
+  })
+  .on('end', () => {
+    console.log('CSV file successfully processed');
+  });
+
+const blacklist = [];
 
 try {
   files = fs.readdirSync(`${folderPatch}/icons/`, { withFileTypes: true });
@@ -173,7 +83,28 @@ if (!_.isEmpty(config.apikey)) {
                 })
                 .catch((err) => cmlog.error(new Error(err)));
             })
-            .catch((err) => cmlog.error(new Error(err)));
+            .catch((err) => {
+              if (err.response.status === 400) {
+                console.log('filename', crypto);
+                cmlog.error(new Error(`Crypto icon not found => "${crypto}"`));
+
+                var wstream = fs.createWriteStream('blacklist.csv', {
+                  flags: 'a',
+                });
+                wstream.write(`${crypto},`);
+                wstream.end();
+
+                /*   fs.writeFile(
+                  'blacklist.csv',
+                  crypto,
+
+                  function (err) {
+                    if (err) return console.log(err);
+                    console.log('Hello World > helloworld.txt');
+                  }
+                ); */
+              }
+            });
           if (index + 1 === cryptosData.length) {
             cmlog.done('All icons have been updated !');
           }
