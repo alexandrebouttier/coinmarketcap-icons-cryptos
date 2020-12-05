@@ -1,32 +1,24 @@
 const axios = require('axios');
 const csv = require('csv-parser');
 
-const createCsvWriter = require('csv-writer').createObjectCsvWriter;
-const csvWriter = createCsvWriter({
-  path: 'blacklist.csv',
-});
-
 const cmlog = require('cmlog');
 const _ = require('lodash');
 const download = require('image-downloader');
 const config = require('./config.json');
 const fs = require('fs');
-var wstream = fs.createWriteStream('blacklist.csv');
+
 const folderPatch = process.cwd();
 const cryptos = [];
 
 const filesIconsExists = [];
+const blacklist = [];
 
 fs.createReadStream('blacklist.csv')
   .pipe(csv())
-  .on('data', (row) => {
-    console.log('lectutr', row);
-  })
+  .on('data', (data) => blacklist.push(data))
   .on('end', () => {
-    console.log('CSV file successfully processed');
+    console.log(blacklist);
   });
-
-const blacklist = [];
 
 try {
   files = fs.readdirSync(`${folderPatch}/icons/`, { withFileTypes: true });
@@ -53,7 +45,7 @@ if (!_.isEmpty(config.apikey)) {
       cmlog.success(
         `Retrieving the list of cryptos Total: [${cryptos.length}]`
       );
-
+      console.log('blacklist === ', blacklist);
       const cryptosData = _.filter(
         cryptos,
         (o) => !_.includes(filesIconsExists, o) && !_.includes(blacklist, o)
@@ -85,24 +77,28 @@ if (!_.isEmpty(config.apikey)) {
             })
             .catch((err) => {
               if (err.response.status === 400) {
-                console.log('filename', crypto);
                 cmlog.error(new Error(`Crypto icon not found => "${crypto}"`));
-
-                var wstream = fs.createWriteStream('blacklist.csv', {
+                /*   var wstream = fs.createWriteStream('blacklist.csv', {
                   flags: 'a',
                 });
-                wstream.write(`${crypto},`);
-                wstream.end();
+                wstream.write(`${crypto}` + ',');
+                wstream.end(); */
 
-                /*   fs.writeFile(
-                  'blacklist.csv',
-                  crypto,
+                const createCsvWriter = require('csv-writer')
+                  .createObjectCsvWriter;
+                const csvWriter = createCsvWriter({
+                  path: 'blacklist.csv',
+                  header: [{ id: 'name', title: 'NAME' }],
+                  append: true,
+                });
 
-                  function (err) {
-                    if (err) return console.log(err);
-                    console.log('Hello World > helloworld.txt');
-                  }
-                ); */
+                const records = [{ name: crypto }];
+
+                csvWriter
+                  .writeRecords(records) // returns a promise
+                  .then(() => {
+                    cmlog.info(`Crypto add blacklist => ${crypto}"`);
+                  });
               }
             });
           if (index + 1 === cryptosData.length) {
