@@ -1,6 +1,6 @@
 {
   "name": "coinmarketcap-icons-cryptos",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Get all images icons cryptos coinmarketcap",
   "main": "app.js",
   "repository": "https://github.com/alexandrebouttier/coinmarketcap-icons-cryptos.git",
