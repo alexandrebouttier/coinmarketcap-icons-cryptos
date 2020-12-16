@@ -115,3 +115,29 @@ c 2
 n 8 v
 lc 4
 vec 2
+reb 2
+w cres
+wav 3
+a 5 t
+v sxp
+z 502
+v usdt
+v usdc
+v busd
+v xvs
+v bnb
+v btc
+v eth
+v ltc
+v xrp
+v bch
+v link
+v dot
+m aapl
+m googl
+m tsla
+m nflx
+m baba
+dj 15
+pir
+n 3rd z
