@@ -9,6 +9,7 @@
 
 <h4 align="center">Repository of all crypto icons, and allows you to download all images of icons of crypto currencies listed on the coinmarketcap site</h4>
 
+<a align="center" href="https://github.com/alexandrebouttier/coinmarketcap-icons-cryptos/tree/main/icons">* List of all icons available</a>
 ---
 
 ## Key Features
