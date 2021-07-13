@@ -46,7 +46,9 @@ if (!_.isEmpty(config.apikey)) {
     .then(() => {
       const cryptosData = _.filter(
         cryptos,
-        (o) => !_.includes(filesIconsExists, o) && !_.includes(blacklist, o)
+        (o) =>
+          !_.includes(filesIconsExists, o.replace(/\s+/g, '')) &&
+          !_.includes(blacklist, o.replace(/\s+/g, ''))
       );
 
       cmlog.success(`Retrieving the list of cryptos Total: [${cryptosData.length}]`);
@@ -55,7 +57,11 @@ if (!_.isEmpty(config.apikey)) {
         cmlog.done('All icons have been updated !');
       } else {
         cryptosData.forEach((crypto, index) => {
-          const cryptoName = crypto.replace(/\s+/g, '');
+          let cryptoName = crypto;
+
+          if (cryptoName.indexOf(' ') >= 0) {
+            cryptoName = crypto.replace(/\s+/g, '');
+          }
 
           setTimeout(() => {
             axios
@@ -66,7 +72,7 @@ if (!_.isEmpty(config.apikey)) {
                 }
               )
               .then((o) => {
-                const imageUrl = o.data.data[_.upperCase(cryptoName)].logo;
+                const imageUrl = _.values(o.data.data)[0].logo;
                 const options = {
                   url: imageUrl,
                   dest: `${folderPatch}/icons/${cryptoName}.png`
@@ -75,12 +81,13 @@ if (!_.isEmpty(config.apikey)) {
                 download
                   .image(options)
                   .then(({ filename }) => {
-                    cmlog.success(`Icon saved ${filename}`);
+                    cmlog.success(`Icon saved ${cryptoName} => ${filename}`);
                     cmlog.waitting(`PROGRESS [${index + 1}/${cryptosData.length}]`);
                   })
                   .catch((err) => cmlog.error(new Error(err)));
               })
               .catch((err) => {
+                cmlog.error(new Error(`Error => "${cryptoName} ${err}"`));
                 if (err && err.response && err.response.status === 400) {
                   cmlog.error(new Error(`Crypto icon not found => "${cryptoName}"`));
 
