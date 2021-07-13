@@ -10,6 +10,7 @@ const _ = require('lodash');
 const download = require('image-downloader');
 
 const config = require('./config.json');
+const package = require('./package.json');
 
 const folderPatch = process.cwd();
 const cryptos = [];
@@ -32,7 +33,8 @@ try {
   cmlog.error(new Error(err));
 }
 
-cmlog.start('Start generator');
+cmlog.start(`coinmarketcap-icons-cryptos V${package.version} => Start generator`);
+
 if (!_.isEmpty(config.apikey)) {
   axios
     .get('https://pro-api.coinmarketcap.com/v1/cryptocurrency/map', {

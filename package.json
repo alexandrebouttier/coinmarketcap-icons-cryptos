@@ -2,7 +2,7 @@
   "name": "coinmarketcap-icons-cryptos",
   "version": "1.0.2",
   "description": "Get all images icons cryptos coinmarketcap",
-  "main": "app.js",
+  "main": "start.js",
   "repository": "https://github.com/alexandrebouttier/coinmarketcap-icons-cryptos.git",
   "author": "Alexandre",
   "license": "MIT",
