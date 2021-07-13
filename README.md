@@ -34,7 +34,7 @@ Add your coinmarketcap api key in config.json, works with free subscriptions
 
 ```bash
 # Run the script
-$ node app.js
+$ node start
 ```
 
 
