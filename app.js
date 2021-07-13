@@ -88,7 +88,9 @@ if (!_.isEmpty(config.apikey)) {
               })
               .catch((err) => {
                 cmlog.error(new Error(`Error => "${cryptoName} ${err}"`));
-                if (err && err.response && err.response.status === 400) {
+
+                //&& err.response && err.response.status === 400
+                if (err) {
                   cmlog.error(new Error(`Crypto icon not found => "${cryptoName}"`));
 
                   const csvWriter = createCsvWriter({
@@ -100,9 +102,12 @@ if (!_.isEmpty(config.apikey)) {
                   const records = [{ name: cryptoName }];
 
                   csvWriter
-                    .writeRecords(records) // returns a promise
+                    .writeRecords(records)
                     .then(() => {
                       cmlog.info(`Crypto add blacklist => ${cryptoName}"`);
+                    })
+                    .catch((err) => {
+                      cmlog.error(new Error(`Error write icon in blacklist => "${cryptoName}"`));
                     });
                 }
               });
